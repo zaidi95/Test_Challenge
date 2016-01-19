@@ -1,0 +1,72 @@
+﻿@model MVCTest.Models.ProductsModel
+
+@{
+    ViewBag.Title = "Product Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $().ready(function () {
+        GetComments();
+        $("#btncomment").on("click", PostComment);
+
+        $('textarea').keypress(function (event) {
+            if (event.keyCode == 13) {
+                $("#btncomment").click();
+            }
+        });
+    });
+
+    function PostComment() {
+        var commentText = $("#txtCommentPost").val();
+        var productId = $("#productId").val();
+        $.ajax({
+            url: '@Url.Action("PostComment", "Products")',
+            type: "POST",
+            data: JSON.stringify({ productId: productId, commentText: commentText }),
+            dataType: "html",
+            contentType: "application/json; charset-utf-8",
+            success: function (Result) {
+                $('#commentsdiv').html(Result);
+                $("#txtCommentPost").val("");
+            },
+            error: function (msg) {
+            }
+        });
+    }
+    function GetComments() {
+        var productId = $("#productId").val();
+        jQuery.ajax({
+            url: '@Url.Action("Comments", "Products")',
+            data: { "productId": productId },
+            type: "GET",
+            dataType: "html",
+            contentType: "application/json; charset-utf-8",
+            success: function (Result) {
+                $('#commentsdiv').html(Result);
+            },
+            error: function (msg) {
+            }
+        });
+    }
+</script>
+
+<h2>ProductDetails</h2>
+<input type="hidden" value="@ViewBag.ProductId" id="productId" />
+<table>
+    <tr>
+        <td><b>Product Name:</b></td>
+        <td>@Html.DisplayFor(a => Model.ProductName)</td>
+    </tr>
+    <tr>
+        <td><b>Description:</b></td>
+        <td>@Html.DisplayFor(a => Model.Description)</td>
+    </tr>
+</table>
+<h3>Comments</h3>
+<div id="commentsdiv"></div>
+<textarea style="width: 470px; margin-left:5px; height:20px; font-size:13px; resize:none;" id="txtCommentPost" cols=" "></textarea>
+<input type="button" id="btncomment" value="Post Comment" />
+<br />
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

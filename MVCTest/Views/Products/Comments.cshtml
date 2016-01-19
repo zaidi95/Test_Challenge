@@ -1,0 +1,30 @@
+﻿@model IEnumerable<MVCTest.Models.CommentsModel>
+
+@foreach (var item in Model)
+{
+    <div class="comments">
+        <div>
+            <div>
+                <div>
+                    <div>
+                        <span>
+                            @Html.ActionLink(item.Username, "#")
+                        </span><span>
+                            <span> </span><span>
+                                <span>
+                                    <span>
+                                        @Html.DisplayFor(modelitem => item.Comment)
+                                    </span>
+                                </span>
+                            </span>
+                        </span><div></div><span></span>
+                    </div>
+                    <div>
+                        @Html.DisplayFor(modelitem => item.CommentedDate)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
